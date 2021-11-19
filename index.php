@@ -1,6 +1,8 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head> 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,6 +57,17 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#divContacto">Contacto</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="login.php" style="background-color:#4992fd; border-radius:14px; font-size:1rem; margin-top:8px">
+                    <?php if(isset($_SESSION["correo"])) echo "Cambiar Cuenta"; else echo "Iniciar Sesión";?>
+                    </a>
+                </li>
+
+                <a class="nav-link" href="carrito.php" style="font-family: 'Material Icons';"><span class="material-icons-outlined">
+                        shopping_cart
+                        </span>
+                </a> 
             </ul>
         </div>
       
@@ -63,7 +76,7 @@
     <main>
         <div id="divHero">
             <h3>Café con ❤️</h3>
-            <p>Empieza a elegir tu café, nosotros nos encargamos del resto</p>
+            <p><?php if(isset($_SESSION["nombre"])) echo "Hola, ".$_SESSION["nombre"]."! "?>Empieza a elegir tu café, nosotros nos encargamos del resto</p>
             <a class="link" id="botondivHeroa" href="#divProductos"><div id="botondivHero" class="boton">COMPRAR CAFÉ</div></a>
         </div>
         
@@ -77,42 +90,43 @@
             <h1>Productos:</h1>
         
             <div id="divProductos">
-                <div class="producto">
-                    <img src="producto1.jpg" alt=""> 
+                <!-- <div class="producto">
+                    <img src="imagenes/producto1.jpg" alt=""> 
                     <p class="descripcion">Cafe Etzal, café tipo Honey de Especialidad, cafe artesanal, cafe altas montañas (320 gr) </p>
                     <p class="precio">$300</p>
                     <a class="link" href="#"><div class="boton">COMPRAR</div></a>
                 </div>
                 <div class="producto">
-                    <img src="producto2.jpg" alt=""> 
+                    <img src="imagenes/producto2.jpg" alt=""> 
                     <p class="descripcion">Café Doce Doce Premium Grano Honey (250 grs)</p>
                     <p class="precio">$240</p>
                     <a class="link" href="#"><div class="boton">COMPRAR</div></a>
                 </div>
                 <div class="producto">
-                    <img src="producto3.jpg" alt=""> 
+                    <img src="imagenes/producto3.jpg" alt=""> 
                     <p class="descripcion">Adore Coffee The Mastro Blend Coffee Bean (1kg)</p>
                     <p class="precio">$350</p>
                     <a class="link" href="#"><div class="boton">COMPRAR</div></a>
                 </div>
                 <div class="producto">
-                    <img src="producto4.png" alt=""> 
+                    <img src="imagenes/producto4.png" alt=""> 
                     <p class="descripcion">Beraldo Premium Blend Coffee Beans (1kg)</p>
                     <p class="precio">$450</p>
                     <a class="link" href="#"><div class="boton">COMPRAR</div></a>
                 </div>
                 <div class="producto">
-                    <img src="producto5.jpg" alt=""> 
+                    <img src="imagenes/producto5.jpg" alt=""> 
                     <p class="descripcion">Campos Roma Espresso Blend coffee beans (1kg)</p>
                     <p class="precio">$500</p>
                     <a class="link" href="#"><div class="boton">COMPRAR</div></a>
                 </div>
                 <div class="producto">
-                    <img src="producto6.jpg" alt=""> 
+                    <img src="imagenes/producto6.jpg" alt=""> 
                     <p class="descripcion">Coffex SuperBar coffee beans (1kg)</p>
                     <p class="precio">$300</p>
                     <a class="link" href="#"><div class="boton">COMPRAR</div></a>
-                </div>
+                </div> -->
+                <?php require_once("fetchProductos.php");?>
                 
             </div>
         </div>
@@ -138,7 +152,7 @@
                 </table>
             </form>
         </div>
-
+    
         
     </main>
 

@@ -190,13 +190,35 @@ td{
     width: .1rem;
 } */
 
-input[type="text"], textarea{
+table input[type="text"], table textarea, table input[type="password"]{
     width: 16rem;
     background-color: rgba(255, 255, 255, 0.267);
     border: 2px solid white;
     border-radius: 15px;
     padding: .5rem;
 }
+
+/*----------------PRODUCTO.PHP--------------------------------*/
+
+/* #divProdMain{
+    display: flex;
+    background-color: cyan;
+    font: var(--font3);
+}
+
+#imagenProd{
+    background-color: brown;
+    width: 45%;
+}
+
+#imagenProd img{
+    
+}
+
+#datosProd{
+    background-color: cyan;
+    width: 45%;
+} */
 
 
 @media screen and (min-width: 980px){
@@ -265,23 +287,8 @@ input[type="text"], textarea{
         padding: .4rem;
     }
     
-    input[type="text"], textarea{
+    table input[type="text"],table textarea{
         width: 20rem;
-        background-color: rgba(255, 255, 255, 0.267);
-        border: 2px solid white;
-        border-radius: 15px;
-        padding: .5rem;
     }
 }
 
-/* @media screen and (min-width: 700px){
-    #divProductos{
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media screen and (min-width: 600px){
-    #divProductos{
-        grid-template-columns: repeat(1, 1fr);
-    }
-} */
