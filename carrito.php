@@ -116,16 +116,65 @@
             ?>            
         </div>
         <hr>
-        <div style="padding:2rem;">
-            <p>Total = <?=$total?></p>
-            <form action="" method="POST">
+        <div style="padding:2rem; margin:auto;"> 
+            <p style="display:flex; justify-content:center">Total :  <b style="color:green">$<?=$total?></b></p>
+            <form action="" method="POST"  style="display:flex; justify-content:center;">
                 <input type="hidden" name="listo" value="si">
                 <input type="submit" value="Comprar" class="boton">
             </form>
-            <br> <br>
-            <a href="index.php#divProductos" class="boton">Volver</a>
-        </div>
+            <br><br>
 
+            <!-- Boton de paypal -->
+            <div id="smart-button-container">
+            <div style="text-align: center;">
+                <div id="paypal-button-container"></div>
+            </div>
+            </div>
+            <script src="https://www.paypal.com/sdk/js?client-id=sb&enable-funding=venmo&currency=USD" data-sdk-integration-source="button-factory"></script>
+            <script>
+                function initPayPalButton() {
+                paypal.Buttons({
+                    style: {
+                    shape: 'rect',
+                    color: 'gold',
+                    layout: 'vertical',
+                    label: 'paypal',
+                    
+                    },
+
+                    createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{"amount":{"currency_code":"USD","value":1}}]
+                    });
+                    },
+
+                    onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(orderData) {
+                        
+                        // Full available details
+                        console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+
+                        // Show a success message within this page, e.g.
+                        const element = document.getElementById('paypal-button-container');
+                        element.innerHTML = '';
+                        element.innerHTML = '<h3>Thank you for your payment!</h3>';
+
+                        // Or go to another URL:  actions.redirect('thank_you.html');
+                        
+                    });
+                    },
+
+                    onError: function(err) {
+                    console.log(err);
+                    }
+                }).render('#paypal-button-container');
+                }
+                initPayPalButton();
+            </script>
+            <br> <br>
+            <a href="index.php#divProductos" class="boton">⬅ Volver</a>
+        </div>
+ 
 <br><br>
         <div id="divContacto">
             <h1>Contáctanos:</h1>

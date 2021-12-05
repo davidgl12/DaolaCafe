@@ -76,16 +76,16 @@
             $tienda = new Tienda();
             //Para cuentas existentes
             if($_POST["tipo"] == "existente"){
-                $sql = "SELECT id, correo, contrasenia, nombre FROM usuarios where correo = '" . $_POST["correo"]."'";
+                $sql = "SELECT id, correo, contrasenia, nombre FROM usuarios where correo = '" . validarDato($_POST["correo"])."'";
                 if(!($arreglo = $tienda->ejecutarQuery($sql))){
                     $errorLogin = true;
                 }
                 else{
-                    $correo = $_POST["correo"];
-                    $contrasenia = $_POST["contrasenia"];
+                    $correo = validarDato($_POST["correo"]);
+                    $contrasenia = validarDato($_POST["contrasenia"]);
                     $nombre = $arreglo[0]["nombre"];
 
-                    if(trim($contrasenia) == trim($arreglo[0]["contrasenia"])){
+                    if($contrasenia == trim($arreglo[0]["contrasenia"])){
                         $_SESSION["id"] = $arreglo[0]["id"];
                         $_SESSION["correo"] = $correo;
                         $_SESSION["contrasenia"] = $contrasenia;
@@ -95,16 +95,17 @@
                         $errorLogin = true;
                     }
                 }
+                
                 //Para nuevas cuentas
             }else if($_POST["tipo"] == "nueva"){
-                $sql = "SELECT correo FROM usuarios where correo = '" . $_POST["correo"]."'";
+                $sql = "SELECT correo FROM usuarios where correo = '" . validarDato($_POST["correo"])."'";
                 if($tienda->ejecutarQuery($sql)){
-                    $nombre = $_POST["nombre"];
-                    $correo = $_POST["correo"];
-                    $contrasenia = $_POST["contrasenia"];
-                    $direccion = $_POST["direccion"];
-                    $ciudad = $_POST["ciudad"];
-                    $pais = $_POST["pais"];
+                    $nombre = validarDato($_POST["nombre"]);
+                    $correo = validarDato($_POST["correo"]);
+                    $contrasenia = validarDato($_POST["contrasenia"]);
+                    $direccion = validarDato($_POST["direccion"]);
+                    $ciudad = validarDato($_POST["ciudad"]);
+                    $pais = validarDato($_POST["pais"]);
 
                     $sql = "INSERT INTO usuarios VALUES (NULL,'$nombre','$correo','$contrasenia','$direccion','$ciudad','$pais');";
                     $arreglo = $tienda->ejecutarQuery($sql);
@@ -123,26 +124,28 @@
         <br><br><br>
 
         <div id="divMain">
-            <form action="login.php" method="post">
+            <!-- Cuentas existentes -->
+            <form id="formExistente" action="login.php" method="post">
                 <div id="divContacto" style="border-radius:14px">
                 <p style="color:red"><?php if($errorLogin) echo "Correo o contraseña incorrectos" ?></p>
                 <table>
                     <tr><td colspan="2" style="text-align:center"><h1>Iniciar sesión</h1></td></tr>
                     <tr><td>Correo: </td></tr>
-                    <tr><td><input type="text" name="correo"></td></tr>
+                    <tr><td><input id="eCorreo" type="text" name="correo"></td></tr>
 
                     <tr><td>Contraseña: </td></tr>
-                    <tr><td><input type="password" name="contrasenia"></td></tr>
+                    <tr><td><input id="ePassword" type="password" name="contrasenia"></td></tr>
                     <input type="hidden" name="tipo" value="existente">
                     <tr>
                         <td colspan="2">
-                        <input type="submit" value="ENTRAR" class="boton" style=" width: 100%; margin-top: 3rem;" ></td>
+                        <input id="botonExistente" type="submit" value="ENTRAR" class="boton" style=" width: 100%; margin-top: 3rem;" ></td>
                     </tr>
                 </table>
                 </div>
             </form>
 
-            <form action="" method="post">
+            <!-- Cuentas no existentes -->
+            <form id="formNuevo" action="login.php" method="post">
                 <div id="divContacto" style="border-radius:14px; background-color: #3bceac">
                 <table>
                     <tr><td colspan="2" style="text-align:center"><h1>Crear cuenta</h1></td></tr>
@@ -152,31 +155,75 @@
                     <td><input type="text" name="nombre"></td></tr>
 
                     <tr><td>Correo: </td>
-                    <td><input type="text" name="correo"></td></tr>
+                    <td><input id="nCorreo" type="text" name="correo"></td></tr>
 
                     <tr><td>Contraseña: </td>
-                    <td><input type="password" name="contrasenia"></td></tr>
+                    <td><input id="nPassword" type="password" name="contrasenia"></td></tr>
 
                     <tr><td>Dirección: </td>
                     <td><input type="text" name="direccion"></td></tr>
 
-                    <tr><td>Ciudad: </td>
-                    <td><input type="text" name="ciudad"></td></tr>
-
                     <tr><td>País: </td>
                     <td><input type="text" name="pais"></td></tr>
+
+                    <tr><td>Ciudad: </td>
+                    <td><input type="text" name="ciudad"></td></tr>
 
                     <input type="hidden" name="tipo" value="nueva">
                     <tr>
                         <td colspan="2">
-                        <input type="submit" value="CREAR" class="boton" style=" width: 100%; margin-top: 3rem;" ></td>
+                        <input id="botonNuevo" type="submit" value="CREAR" class="boton" style=" width: 100%; margin-top: 3rem;" ></td>
                     </tr>
                 </table>
                 </div>
             </form>
+
         </div>
         <a href="adminLogin.php">Iniciar sesión como administrador</a>
     </main>
+
+
+    <script>
+        const regexCorreo = /.{3,}@.{3,}\..{1,}/;
+        const regexContra = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/;
+
+        // Valida la contraseña y el correo de las existentes 
+        const existente = document.querySelector("#botonExistente");
+        existente.addEventListener("click", () => {
+            const correo = document.querySelector('#eCorreo').value.trim();
+            const contra = document.querySelector('#ePassword').value.trim();
+
+            if(!regexCorreo.test(correo)){
+                alert("Inserte un correo válido");
+                <?php $_POST["tipo"] = "error" ?>
+            }
+            if(!regexContra.test(contra)){
+                alert("Inserte contraseña válida: "+ 
+                "8 caracteres mínimo, al menos un número, un caracter especial"+
+                "y una letra mayúscula");
+                <?php $_POST["tipo"] = "error" ?>
+            }
+        });
+
+        // Valida la contraseña y el correo de las nuevas
+        const nuevo = document.querySelector("#botonNuevo");
+        nuevo.addEventListener("click", () => {
+            const correo = document.querySelector('#nCorreo').value.trim();
+            const contra = document.querySelector('#nPassword').value.trim();
+
+            if(!regexCorreo.test(correo)){
+                alert("Inserte un correo válido");
+                <?php $_POST["tipo"] = "error" ?>
+            }
+            if(!regexContra.test(contra)){
+                alert("Inserte contraseña válida: "+ 
+                "8 caracteres mínimo, al menos un número, un caracter especial"+
+                "y una letra mayúscula");
+                <?php $_POST["tipo"] = "error" ?>
+            }
+        });
+    </script>
+
 
     <style>
         #divMain{

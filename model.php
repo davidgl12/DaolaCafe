@@ -4,8 +4,8 @@
         protected $dataArr = array();
         //MODIFIQUE ESTO A UN USUARIO DE MYSQL QUE PUEDA MODIFICAR SU BASE DE DATOS CORRESPONDIENTE:
         //normalmente usuario = root y contrasenia = "", creo
-        private $usuario = "";
-        private $contrasenia = "";
+        private $usuario = "administrador";
+        private $contrasenia = "Adminpassword911!";
 
         function __construct(){
             /*Cambiar esto: */
@@ -14,7 +14,7 @@
                 die("Falló la conexión: " . $this->conn->connect_error);
             }
         }
-
+ 
         function __destruct(){
             $this->conn->close();
         }
@@ -47,5 +47,13 @@
         function getContrasenia(){
             return $this->contrasenia;
         }
+    }
+
+    // Función global usada para validar datos
+    function validarDato($dato){
+        $dato = trim($dato);
+        $dato = stripslashes($dato);
+        $dato = htmlspecialchars($dato);
+        return $dato;
     }
 ?>
